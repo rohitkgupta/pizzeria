@@ -3,7 +3,7 @@ package com.pizzeria.store.service.impl;
 import com.pizzeria.store.dao.ItemDao;
 import com.pizzeria.store.dao.impl.ItemDaoImpl;
 import com.pizzeria.store.entity.Item;
-import com.pizzeria.store.entity.PizzaToppingDecorator;
+import com.pizzeria.store.entity.ToppingDecorator;
 import com.pizzeria.store.exception.InvalidDataException;
 import com.pizzeria.store.exception.InvalidOrderException;
 import com.pizzeria.store.service.ItemService;
@@ -85,22 +85,26 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void validateStock(Item item) {
+    public Item validateStock(Item item) {
         if (item != null && item.getId() != null && item.getQuantity() != null) {
-            Optional<Item> existingItem = itemDao.getItem(item.getId());
-            if (!existingItem.isPresent() || existingItem.get().getQuantity() < item.getQuantity()) {
-                throw new InvalidOrderException("Item [" + item.getId() + existingItem.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
+            Optional<Item> result = itemDao.getItem(item.getId());
+            Item existingItem = result.get();
+            if (!result.isPresent() || existingItem.getQuantity() < item.getQuantity()) {
+                throw new InvalidOrderException("Item [" + item.getId() + result.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
             }
+            item.setName(existingItem.getName());
+            item.setPrice(existingItem.getPrice());
         } else {
             throw new InvalidDataException("Invalid item id/quantity");
         }
+        return item;
     }
 
     private List<Item> addToppingsInItemList(List<Item> items) {
         List<Item> itemListWithTopping = new LinkedList<>(items);
         for (Item item : items) {
-            if(item instanceof PizzaToppingDecorator){
-                itemListWithTopping.addAll(((PizzaToppingDecorator)item).getToppingList());
+            if(item instanceof ToppingDecorator){
+                itemListWithTopping.addAll(((ToppingDecorator)item).getToppingList());
             }
         }
         return itemListWithTopping;
