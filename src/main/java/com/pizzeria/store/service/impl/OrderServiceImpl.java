@@ -28,4 +28,9 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(Order.Status.PLACED);
         return order;
     }
+
+    @Override
+    public Order validate(Order order) {
+        return validatorService.validate(order);
+    }
 }

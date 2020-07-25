@@ -20,13 +20,14 @@ public class OrderValidatorServiceImpl implements OrderValidatorService {
     }
 
     @Override
-    public void validate(Order order) {
+    public Order validate(Order order) {
         validateMandatoryField(order);
         List<Item> validatedItems = new LinkedList<>();
         for (Item item : order.getCart().getItems()) {
             validatedItems.add(itemValidatorService.validate(item));
         }
         order.getCart().setItems(validatedItems);
+        return order;
     }
 
     private void validateMandatoryField(Order order) {

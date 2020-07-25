@@ -30,7 +30,7 @@ public class ItemValidatorService {
 
     public Item validate(Item item) {
         validateMandatoryField(item);
-        itemService.validateStock(item);
+        item = itemService.validateStock(item);
         return validateRules(item);
     }
 

@@ -1,6 +1,7 @@
 package com.pizzeria.store.entity;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Cart {
@@ -33,5 +34,27 @@ public class Cart {
             }
         }
         return total;
+    }
+
+    public static class Builder {
+        private String userName;
+        private List<Item> items = new LinkedList<>();
+
+        public Builder forUser(String name){
+            this.userName = name;
+            return this;
+        }
+
+        public Builder addItem(Item item){
+            this.items.add(item);
+            return this;
+        }
+
+        public Cart build(){
+            Cart cart = new Cart();
+            cart.userName = this.userName;
+            cart.items = this.items;
+            return cart;
+        }
     }
 }

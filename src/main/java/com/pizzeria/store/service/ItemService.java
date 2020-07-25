@@ -13,5 +13,5 @@ public interface ItemService {
     Item addItem(Item item);
     Item updateItem(Item item);
     List<Item> placeOrderAndUpdateItemInventory(List<Item> items);
-    void validateStock(Item item);
+    Item validateStock(Item item);
 }
