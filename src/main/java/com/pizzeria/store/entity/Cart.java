@@ -1,12 +1,11 @@
 package com.pizzeria.store.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
     private String userName;
     private List<Item> items;
-    private Integer total;
-
 
     public String getUserName() {
         return userName;
@@ -17,17 +16,22 @@ public class Cart {
     }
 
     public List<Item> getItems() {
+        if (items == null){
+            items = new ArrayList<>();
+        }
         return items;
     }
 
     public void setItems(List<Item> items) {
         this.items = items;
     }
-    public Integer getTotal() {
+    public Float getTotal() {
+        Float total = 0f;
+        for (Item item: this.getItems()) {
+            if (item.getPrice() != null) {
+                total = total + item.getPrice();
+            }
+        }
         return total;
-    }
-
-    public void setTotal(Integer total) {
-        this.total = total;
     }
 }

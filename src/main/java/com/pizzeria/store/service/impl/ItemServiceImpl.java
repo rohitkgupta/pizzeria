@@ -3,10 +3,12 @@ package com.pizzeria.store.service.impl;
 import com.pizzeria.store.dao.ItemDao;
 import com.pizzeria.store.dao.impl.ItemDaoImpl;
 import com.pizzeria.store.entity.Item;
+import com.pizzeria.store.entity.PizzaToppingDecorator;
 import com.pizzeria.store.exception.InvalidDataException;
 import com.pizzeria.store.exception.InvalidOrderException;
 import com.pizzeria.store.service.ItemService;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -65,27 +67,42 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<Item> placeOrderAndUpdateItemInventory(List<Item> items) {
-        if (items != null && items.isEmpty()) {
-            for (Item item : items) {
-                if (item == null || item.getId() == null || item.getQuantity() <= 0) {
-                    throw new InvalidDataException("Invalid order.");
-                }
-            }
+        if (items != null && !items.isEmpty()) {
+            List<Item> itemListWithTopping = addToppingsInItemList(items);
             try {
-                for (Item item : items) {
+                for (Item item : itemListWithTopping) {
                     LockService.getLock(item.getId()).writeLock().lock();
-                    Optional<Item> existingItem = itemDao.getItem(item.getId());
-                    if (!existingItem.isPresent() || existingItem.get().getQuantity() < item.getQuantity()) {
-                        throw new InvalidOrderException("Item [" + item.getId() + existingItem.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
-                    }
+                    validateStock(item);
                 }
-                return itemDao.updateQuantity(items);
+                return itemDao.updateQuantity(itemListWithTopping);
             } finally {
-                for (Item item : items) {
+                for (Item item : itemListWithTopping) {
                     LockService.getLock(item.getId()).writeLock().unlock();
                 }
             }
         }
-        return items;
+        throw new InvalidOrderException("Empty cart.");
+    }
+
+    @Override
+    public void validateStock(Item item) {
+        if (item != null && item.getId() != null && item.getQuantity() != null) {
+            Optional<Item> existingItem = itemDao.getItem(item.getId());
+            if (!existingItem.isPresent() || existingItem.get().getQuantity() < item.getQuantity()) {
+                throw new InvalidOrderException("Item [" + item.getId() + existingItem.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
+            }
+        } else {
+            throw new InvalidDataException("Invalid item id/quantity");
+        }
+    }
+
+    private List<Item> addToppingsInItemList(List<Item> items) {
+        List<Item> itemListWithTopping = new LinkedList<>(items);
+        for (Item item : items) {
+            if(item instanceof PizzaToppingDecorator){
+                itemListWithTopping.addAll(((PizzaToppingDecorator)item).getToppingList());
+            }
+        }
+        return itemListWithTopping;
     }
 }

@@ -8,10 +8,15 @@ public class Item {
     private Float price;
     private Integer quantity;
 
-    public Item(Type type, String name, Float price) {
+    public Item(Integer id, Integer quantity){
+        this.id = id;
+        this.quantity = quantity;
+    }
+    public Item(Type type, String name, Float price, Integer quantity) {
         this.type = type;
         this.name = name;
         this.price = price;
+        this.quantity = quantity;
     }
 
     public Item(Item item) {

@@ -9,8 +9,9 @@ public class PizzaToppingDecorator extends Pizza{
     private Topping topping;
 
     public PizzaToppingDecorator(Pizza pizza, Topping topping){
-        super(pizza.getName(), pizza.getPrice(), pizza.getSize(), pizza.getPizzaType());
+        super(pizza.getName(), pizza.getPrice(), pizza.getSize(), pizza.getPizzaType(), pizza.getQuantity());
         this.pizza = pizza;
+        topping.setQuantity(1);
         this.topping = topping;
     }
 

@@ -11,7 +11,7 @@ public class ItemDaoImpl implements ItemDao {
 
     private static final ItemDaoImpl INSTANCE = new ItemDaoImpl();
     //Item table. It will have all types of item(Pizza, toppings, sides)
-    private List<Item> items = new ArrayList<>();
+    private List<Item> itemTable = new ArrayList<>();
     //Type index to store list of indexes of same type of item
     private Map<Item.Type, List<Integer>> typeIndex = new HashMap<>();
 
@@ -41,8 +41,8 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public Optional<Item> getItem(Integer id) {
-        if (id < items.size()) {
-            Item item = items.get(id);
+        if (id < itemTable.size()) {
+            Item item = itemTable.get(id);
             if (item instanceof Pizza){
                 return Optional.of(new Pizza((Pizza)item));
             } else if (item instanceof Topping){
@@ -65,8 +65,8 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public Item updateItem(Item item) {
-        if (item != null && item.getId() != null && item.getId() < items.size()) {
-            Item existingItem = items.get(item.getId());
+        if (item != null && item.getId() != null && item.getId() <  itemTable.size()) {
+            Item existingItem = itemTable.get(item.getId());
             if (item.getPrice() != null) {
                 existingItem.setPrice(item.getPrice());
             }
@@ -83,7 +83,7 @@ public class ItemDaoImpl implements ItemDao {
         if (items != null) {
             List<Item> result = new LinkedList<>();
             for (Item item: items) {
-                Item existingItem = items.get(item.getId());
+                Item existingItem = itemTable.get(item.getId());
                 if (item.getQuantity() != null) {
                     existingItem.setQuantity(existingItem.getQuantity() - item.getQuantity());
                 }
@@ -97,9 +97,9 @@ public class ItemDaoImpl implements ItemDao {
     @Override
     public Item addItem(Item item) {
         if (item != null && item.getType() != null) {
-            synchronized (items) {
-                item.setId(items.size());
-                items.add(item);
+            synchronized (itemTable) {
+                item.setId(itemTable.size());
+                itemTable.add(item);
                 updateIndex(item);
             }
             return item;

@@ -10,18 +10,28 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OrderValidatorServiceImpl implements OrderValidatorService {
-
+    private static final OrderValidatorService INSTANCE = new OrderValidatorServiceImpl();
     private ItemValidatorService itemValidatorService = ItemValidatorService.getInstance();
+
+    private OrderValidatorServiceImpl() {}
+
+    public static OrderValidatorService getInstance(){
+        return INSTANCE;
+    }
 
     @Override
     public void validate(Order order) {
-        if (order == null || order.getCart() == null || order.getCart().getItems().isEmpty()) {
-            throw new InvalidDataException("Invalid Order.");
-        }
+        validateMandatoryField(order);
         List<Item> validatedItems = new LinkedList<>();
         for (Item item : order.getCart().getItems()) {
             validatedItems.add(itemValidatorService.validate(item));
         }
         order.getCart().setItems(validatedItems);
+    }
+
+    private void validateMandatoryField(Order order) {
+        if (order == null || order.getCart() == null || order.getCart().getItems().isEmpty()) {
+            throw new InvalidDataException("Invalid Order.");
+        }
     }
 }

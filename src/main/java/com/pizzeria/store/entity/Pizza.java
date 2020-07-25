@@ -6,8 +6,8 @@ public class Pizza extends Item {
     private Crust crust;
     private Size size;
 
-    public Pizza(String name, Float price, Size size, Type pizzaType) {
-        super(Item.Type.PIZZA, name, price);
+    public Pizza(String name, Float price, Size size, Type pizzaType, Integer quantity) {
+        super(Item.Type.PIZZA, name, price, quantity);
         this.size = size;
         this.pizzaType = pizzaType;
     }

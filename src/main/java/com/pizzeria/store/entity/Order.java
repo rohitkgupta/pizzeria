@@ -4,6 +4,11 @@ public class Order {
     private Cart cart;
     private Status status;
 
+    public Order(Cart cart){
+        this.cart = cart;
+        this.status = Status.NEW_ORDER;
+    }
+
     public Cart getCart() {
         return cart;
     }
@@ -21,6 +26,6 @@ public class Order {
     }
 
     public enum Status {
-        PLACED, FAILED;
+        PLACED, NEW_ORDER;
     }
 }
