@@ -14,4 +14,5 @@ public interface ItemDao {
     Optional<Item> getItem(Item.Type type, String name);
     Item addItem(Item item);
     Item updateItem(Item item);
+    List<Item> updateQuantity(List<Item> items);
 }

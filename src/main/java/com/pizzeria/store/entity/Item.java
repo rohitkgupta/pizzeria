@@ -14,6 +14,18 @@ public class Item {
         this.price = price;
     }
 
+    public Item(Item item) {
+        super();
+        if (item != null) {
+            this.id = item.id;
+            this.type = item.type;
+            this.name = item.name;
+            this.description = item.description;
+            this.price = item.price;
+            this.quantity = item.quantity;
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -34,10 +46,6 @@ public class Item {
         return type;
     }
 
-    protected void setType(Type type) {
-        this.type = type;
-    }
-
     public String getDescription() {
         if (description != null) {
             return description;
@@ -54,16 +62,16 @@ public class Item {
         return price;
     }
 
-    public void setPrice(Float price) {
-        this.price = price;
-    }
-
     public Integer getQuantity() {
         return quantity;
     }
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 
     public static enum Type {

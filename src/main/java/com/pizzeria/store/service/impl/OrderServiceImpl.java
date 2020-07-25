@@ -1,4 +1,28 @@
 package com.pizzeria.store.service.impl;
 
-public class OrderServiceImpl {
+import com.pizzeria.store.entity.Order;
+import com.pizzeria.store.service.ItemService;
+import com.pizzeria.store.service.OrderService;
+import com.pizzeria.store.service.OrderValidatorService;
+
+public class OrderServiceImpl implements OrderService {
+
+    private static final OrderServiceImpl INSTANCE = new OrderServiceImpl();
+    private OrderValidatorService validatorService = new OrderValidatorServiceImpl();
+    private ItemService itemService = ItemServiceImpl.getInstance();
+
+    private OrderServiceImpl() {
+    }
+
+    public static OrderService getInstance() {
+        return INSTANCE;
+    }
+
+    @Override
+    public Order placeOrder(Order order) {
+        validatorService.validate(order);
+        itemService.placeOrderAndUpdateItemInventory(order.getCart().getItems());
+        order.setStatus(Order.Status.PLACED);
+        return order;
+    }
 }

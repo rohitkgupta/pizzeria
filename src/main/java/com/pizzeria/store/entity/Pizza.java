@@ -12,6 +12,15 @@ public class Pizza extends Item {
         this.pizzaType = pizzaType;
     }
 
+    public Pizza(Pizza pizza) {
+        super(pizza);
+        if (pizza != null) {
+            this.pizzaType = pizza.pizzaType;
+            this.crust = pizza.crust;
+            this.size = pizza.size;
+        }
+    }
+
     @Override
     public String getDescription() {
         return super.getDescription() + " (" + this.pizzaType.getName() + ") " + (this.crust != null ? "Crust(" + this.crust.getName() + ")" : "") + " " +
@@ -20,10 +29,6 @@ public class Pizza extends Item {
 
     public Type getPizzaType() {
         return pizzaType;
-    }
-
-    public void setPizzaType(Type pizzaType) {
-        this.pizzaType = pizzaType;
     }
 
     public Crust getCrust() {
@@ -36,10 +41,6 @@ public class Pizza extends Item {
 
     public Size getSize() {
         return size;
-    }
-
-    public void setSize(Size size) {
-        this.size = size;
     }
 
     public enum Size {

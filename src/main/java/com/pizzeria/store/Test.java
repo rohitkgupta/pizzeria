@@ -1,21 +1,48 @@
 package com.pizzeria.store;
 
-import com.pizzeria.store.entity.Crust;
-import com.pizzeria.store.entity.Pizza;
-import com.pizzeria.store.entity.Topping;
-import com.pizzeria.store.entity.PizzaToppingDecorator;
+import com.pizzeria.store.entity.*;
+import com.pizzeria.store.service.OrderService;
+import com.pizzeria.store.service.impl.OrderServiceImpl;
+import com.pizzeria.store.utils.PropertyUtils;
+
+import java.util.LinkedList;
 
 public class Test {
     public static void main(String[] args) {
         Pizza p = new Pizza("FarmHouse Pizza", 20f, Pizza.Size.MEDIUM, Pizza.Type.VEG);
-        System.out.println(p.getDescription());
         p.setCrust(new Crust("Hand Tossed"));
-        System.out.println(p.getDescription() +" === " + p.getPrice());
-        Topping topping = new Topping("Tomato", 10f);
+        Topping topping = new Topping("Tomato", 10f, Topping.Type.VEG);
         p = new PizzaToppingDecorator(p, topping);
-        System.out.println(p.getDescription() +" === " + p.getPrice());
-        Topping topping2 = new Topping("olive", 5f);
+        Topping topping2 = new Topping("olive", 5f, Topping.Type.VEG);
         p =  new PizzaToppingDecorator(p, topping2);
-        System.out.println(p.getDescription() +" === " + p.getPrice());
+        Topping topping3 = new Topping("jalapeno", 5f, Topping.Type.VEG);
+        p =  new PizzaToppingDecorator(p, topping3);
+        Topping topping4 = new Topping("mushroom", 5f, Topping.Type.VEG);
+        p =  new PizzaToppingDecorator(p, topping4);
+
+        Order order = new Order();
+        Cart cart = new Cart();
+        LinkedList<Item> items = new LinkedList<>();
+        items.add(p);
+        cart.setItems(items);
+        order.setCart(cart);
+
+        OrderService orderService = OrderServiceImpl.getInstance();
+        try {
+            orderService.placeOrder(order);
+            System.out.println("Order Status:"+order.getStatus());
+
+
+            Topping topping5 = new Topping("chicken", 5f, Topping.Type.NON_VEG);
+            p =  new PizzaToppingDecorator(p, topping5);
+            items.add(p);
+            order.getCart().setItems(items);
+            orderService.placeOrder(order);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+
+
     }
 }

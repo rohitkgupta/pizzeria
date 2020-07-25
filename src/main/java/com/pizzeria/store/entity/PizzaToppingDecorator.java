@@ -1,5 +1,8 @@
 package com.pizzeria.store.entity;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class PizzaToppingDecorator extends Pizza{
 
     private Pizza pizza;
@@ -19,5 +22,22 @@ public class PizzaToppingDecorator extends Pizza{
     @Override
     public Float getPrice() {
         return pizza.getPrice() + topping.getPrice();
+    }
+
+    public Pizza getPizza() {
+        return pizza;
+    }
+
+    public Topping getTopping() {
+        return topping;
+    }
+
+    public List<Topping> getToppingList() {
+        List<Topping> toppings = new LinkedList<>();
+        toppings.add(topping);
+        if (this.getPizza() instanceof PizzaToppingDecorator) {
+            toppings.addAll(((PizzaToppingDecorator) this.getPizza()).getToppingList());
+        }
+        return toppings;
     }
 }

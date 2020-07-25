@@ -4,6 +4,7 @@ import com.pizzeria.store.dao.ItemDao;
 import com.pizzeria.store.dao.impl.ItemDaoImpl;
 import com.pizzeria.store.entity.Item;
 import com.pizzeria.store.exception.InvalidDataException;
+import com.pizzeria.store.exception.InvalidOrderException;
 import com.pizzeria.store.service.ItemService;
 
 import java.util.List;
@@ -14,26 +15,31 @@ public class ItemServiceImpl implements ItemService {
     private ItemDao itemDao = ItemDaoImpl.getInstance();
     private static final ItemServiceImpl INSTANCE = new ItemServiceImpl();
 
-    private ItemServiceImpl() {}
+    private ItemServiceImpl() {
+    }
 
-    public static ItemServiceImpl getInstance(){
+    public static ItemServiceImpl getInstance() {
         return INSTANCE;
     }
 
     @Override
     public Set<Item.Type> getAllItemType() {
-        return null;
+        return itemDao.getAllItemType();
     }
 
     @Override
     public List<Item> getItems(Item.Type type) {
-        return null;
+        return itemDao.getItems(type);
     }
 
     @Override
     public Optional<Item> getItem(Integer id) {
-        LockService.getLock(id).readLock();
-        return itemDao.getItem(id);
+        try {
+            LockService.getLock(id).readLock().lock();
+            return itemDao.getItem(id);
+        } finally {
+            LockService.getLock(id).readLock().unlock();
+        }
     }
 
     @Override
@@ -49,6 +55,37 @@ public class ItemServiceImpl implements ItemService {
         if (item == null || item.getId() == null) {
             throw new InvalidDataException("Invalid data.");
         }
-        return itemDao.updateItem(item);
+        try {
+            LockService.getLock(item.getId()).writeLock().lock();
+            return itemDao.updateItem(item);
+        } finally {
+            LockService.getLock(item.getId()).writeLock().unlock();
+        }
+    }
+
+    @Override
+    public List<Item> placeOrderAndUpdateItemInventory(List<Item> items) {
+        if (items != null && items.isEmpty()) {
+            for (Item item : items) {
+                if (item == null || item.getId() == null || item.getQuantity() <= 0) {
+                    throw new InvalidDataException("Invalid order.");
+                }
+            }
+            try {
+                for (Item item : items) {
+                    LockService.getLock(item.getId()).writeLock().lock();
+                    Optional<Item> existingItem = itemDao.getItem(item.getId());
+                    if (!existingItem.isPresent() || existingItem.get().getQuantity() < item.getQuantity()) {
+                        throw new InvalidOrderException("Item [" + item.getId() + existingItem.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
+                    }
+                }
+                return itemDao.updateQuantity(items);
+            } finally {
+                for (Item item : items) {
+                    LockService.getLock(item.getId()).writeLock().unlock();
+                }
+            }
+        }
+        return items;
     }
 }

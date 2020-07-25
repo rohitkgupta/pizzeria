@@ -2,7 +2,8 @@ package com.pizzeria.store.dao.impl;
 
 import com.pizzeria.store.dao.ItemDao;
 import com.pizzeria.store.entity.Item;
-import com.pizzeria.store.exception.InvalidDataException;
+import com.pizzeria.store.entity.Pizza;
+import com.pizzeria.store.entity.Topping;
 
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class ItemDaoImpl implements ItemDao {
         if (typeIndex.containsKey(type)) {
             result = new ArrayList<>();
             for (Integer index : typeIndex.get(type)) {
-                result.add(items.get(index));
+                result.add(getItem(index).get());
             }
         }
         return result;
@@ -41,7 +42,13 @@ public class ItemDaoImpl implements ItemDao {
     @Override
     public Optional<Item> getItem(Integer id) {
         if (id < items.size()) {
-            return Optional.of(items.get(id));
+            Item item = items.get(id);
+            if (item instanceof Pizza){
+                return Optional.of(new Pizza((Pizza)item));
+            } else if (item instanceof Topping){
+                return Optional.of(new Topping((Topping) item));
+            }
+            return Optional.of(new Item(item));
         }
         return Optional.empty();
     }
@@ -56,18 +63,6 @@ public class ItemDaoImpl implements ItemDao {
         return Optional.empty();
     }
 
-    /*@Override
-    public Item saveItem(Item item) {
-        //If id==null then add as new item
-        if (item.getId() == null) {
-            return addItem(item);
-        } else if (item.getId() < items.size()) {
-            return updateItem(item);
-        } else {
-            throw new InvalidDataException("Item doesn't exist for id:" + item.getId());
-        }
-    } */
-
     @Override
     public Item updateItem(Item item) {
         if (item != null && item.getId() != null && item.getId() < items.size()) {
@@ -79,6 +74,22 @@ public class ItemDaoImpl implements ItemDao {
                 existingItem.setQuantity(item.getQuantity());
             }
             return existingItem;
+        }
+        throw null;
+    }
+
+    @Override
+    public List<Item> updateQuantity(List<Item> items) {
+        if (items != null) {
+            List<Item> result = new LinkedList<>();
+            for (Item item: items) {
+                Item existingItem = items.get(item.getId());
+                if (item.getQuantity() != null) {
+                    existingItem.setQuantity(existingItem.getQuantity() - item.getQuantity());
+                }
+                result.add(existingItem);
+            }
+            return result;
         }
         throw null;
     }
