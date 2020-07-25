@@ -3,6 +3,10 @@ package com.pizzeria.store.entity;
 public class Topping extends Item {
     private Type toppingType;
 
+    public Topping(Integer id) {
+        super(id, Item.Type.TOPPING, 1);
+    }
+
     public Topping(String name, Float price, Type toppingType, Integer quantity) {
         super(Item.Type.TOPPING, name, price, quantity);
         this.toppingType = toppingType;

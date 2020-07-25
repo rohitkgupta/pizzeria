@@ -3,6 +3,8 @@ package com.pizzeria.store.service.impl;
 import com.pizzeria.store.dao.ItemDao;
 import com.pizzeria.store.dao.impl.ItemDaoImpl;
 import com.pizzeria.store.entity.Item;
+import com.pizzeria.store.entity.Pizza;
+import com.pizzeria.store.entity.Topping;
 import com.pizzeria.store.entity.ToppingDecorator;
 import com.pizzeria.store.exception.InvalidDataException;
 import com.pizzeria.store.exception.InvalidOrderException;
@@ -88,23 +90,32 @@ public class ItemServiceImpl implements ItemService {
     public Item validateStock(Item item) {
         if (item != null && item.getId() != null && item.getQuantity() != null) {
             Optional<Item> result = itemDao.getItem(item.getId());
-            Item existingItem = result.get();
-            if (!result.isPresent() || existingItem.getQuantity() < item.getQuantity()) {
+            if (!result.isPresent() || result.get().getQuantity() < item.getQuantity()) {
                 throw new InvalidOrderException("Item [" + item.getId() + result.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
             }
-            item.setName(existingItem.getName());
-            item.setPrice(existingItem.getPrice());
+            copyMetaAndPriceFromDB(item, result.get());
+            if (item.getType() == Item.Type.PIZZA && ((Pizza)item) instanceof ToppingDecorator) {
+                for (Topping topping : ((ToppingDecorator) item).getToppingList()) {
+                    copyMetaAndPriceFromDB(topping, validateStock(topping));
+                }
+            }
         } else {
-            throw new InvalidDataException("Invalid item id/quantity");
+            throw new InvalidDataException("Invalid item id or quantity");
         }
         return item;
+    }
+
+    private void copyMetaAndPriceFromDB(Item item, Item existingItem) {
+        item.setName(existingItem.getName());
+        item.setDescription(existingItem.getDescription());
+        item.setPrice(existingItem.getPrice());
     }
 
     private List<Item> addToppingsInItemList(List<Item> items) {
         List<Item> itemListWithTopping = new LinkedList<>(items);
         for (Item item : items) {
-            if(item instanceof ToppingDecorator){
-                itemListWithTopping.addAll(((ToppingDecorator)item).getToppingList());
+            if (item instanceof ToppingDecorator) {
+                itemListWithTopping.addAll(((ToppingDecorator) item).getToppingList());
             }
         }
         return itemListWithTopping;
