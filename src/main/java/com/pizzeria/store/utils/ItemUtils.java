@@ -6,6 +6,9 @@ import com.pizzeria.store.entity.Topping;
 import com.pizzeria.store.entity.decorator.PizzaDecorator;
 import com.pizzeria.store.entity.decorator.ToppingDecorator;
 import com.pizzeria.store.exception.InvalidDataException;
+import com.pizzeria.store.exception.InvalidOrderException;
+
+import java.util.List;
 
 public class ItemUtils {
 
@@ -40,6 +43,12 @@ public class ItemUtils {
     public static void isValidField(Integer field) {
         if (field == null) {
             throw new InvalidDataException("Invalid data.");
+        }
+    }
+
+    public static void isValid(List<MenuItem> items) {
+        if (items == null || items.isEmpty()) {
+            throw new InvalidOrderException("No item in the list.");
         }
     }
 }

@@ -6,6 +6,7 @@ import com.pizzeria.store.entity.MenuItem;
 import com.pizzeria.store.entity.Pizza;
 import com.pizzeria.store.entity.Topping;
 import com.pizzeria.store.entity.decorator.ToppingDecorator;
+import com.pizzeria.store.exception.InvalidDataException;
 import com.pizzeria.store.exception.InvalidOrderException;
 import com.pizzeria.store.service.ItemService;
 import com.pizzeria.store.utils.ItemUtils;
@@ -49,7 +50,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public MenuItem addItem(MenuItem item) {
         ItemUtils.isValidItemData(item);
+        if (exist(item)){
+            throw new InvalidDataException("Item already exist");
+        }
         return itemDao.addItem(item);
+    }
+
+    private boolean exist(MenuItem item) {
+       return getItems(item.getType()).stream().anyMatch(menuItem -> menuItem.equals(item));
     }
 
     @Override
@@ -66,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void placeOrderAndUpdateItemInventory(List<MenuItem> items) {
-        isValidCart(items);
+        ItemUtils.isValid(items);
         List<MenuItem> itemListWithToppingAndCrust = getItemsToUpdateInventory(items);
         try {
             itemListWithToppingAndCrust.forEach(item -> {
@@ -76,12 +84,6 @@ public class ItemServiceImpl implements ItemService {
             itemDao.updateQuantity(itemListWithToppingAndCrust);
         } finally {
             itemListWithToppingAndCrust.forEach(item -> LockService.getLock(item.getId()).writeLock().unlock());
-        }
-    }
-
-    private void isValidCart(List<MenuItem> items) {
-        if (items == null || items.isEmpty()) {
-            throw new InvalidOrderException("Empty cart.");
         }
     }
 

@@ -1,4 +1,4 @@
-package com.pizzeria.store.helper;
+package com.pizzeria.store.testhelper;
 
 import com.pizzeria.store.entity.Crust;
 import com.pizzeria.store.entity.Pizza;

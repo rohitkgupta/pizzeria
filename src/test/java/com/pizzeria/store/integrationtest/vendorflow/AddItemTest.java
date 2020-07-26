@@ -1,7 +1,7 @@
 package com.pizzeria.store.integrationtest.vendorflow;
 
 import com.pizzeria.store.entity.*;
-import com.pizzeria.store.helper.InventoryHelper;
+import com.pizzeria.store.testhelper.InventoryHelper;
 import com.pizzeria.store.service.ItemService;
 import com.pizzeria.store.service.VendorService;
 import com.pizzeria.store.service.impl.ItemServiceImpl;

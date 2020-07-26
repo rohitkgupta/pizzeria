@@ -27,6 +27,15 @@ public class Topping extends MenuItem {
         this.toppingType = toppingType;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Topping topping = (Topping) o;
+        return toppingType == topping.toppingType;
+    }
+
     public enum Type {
         VEG, NON_VEG, CHEESE
     }

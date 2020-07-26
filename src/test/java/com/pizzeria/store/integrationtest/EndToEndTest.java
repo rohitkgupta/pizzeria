@@ -1,6 +1,6 @@
 package com.pizzeria.store.integrationtest;
 
-import com.pizzeria.store.helper.InventoryHelper;
+import com.pizzeria.store.testhelper.InventoryHelper;
 import com.pizzeria.store.integrationtest.orderflow.PlaceOrderTest;
 import com.pizzeria.store.integrationtest.orderflow.ValidateOrderTest;
 import com.pizzeria.store.integrationtest.vendorflow.AddItemTest;

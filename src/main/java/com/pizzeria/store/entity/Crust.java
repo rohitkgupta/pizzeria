@@ -2,8 +2,8 @@ package com.pizzeria.store.entity;
 
 public class Crust extends MenuItem {
 
-    public Crust(Integer id,  Integer quantity){
-        super(id, Type.CRUST, quantity);
+    public Crust(Integer id){
+        super(id, Type.CRUST, 1);
     }
 
     public Crust(String name, Integer quantity){

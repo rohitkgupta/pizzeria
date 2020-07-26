@@ -1,5 +1,7 @@
 package com.pizzeria.store.entity;
 
+import java.util.Objects;
+
 public class MenuItem {
     private Integer id;
     private Type type;
@@ -83,4 +85,15 @@ public class MenuItem {
     public enum Type {
         PIZZA, TOPPING, SIDES, CRUST;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MenuItem menuItem = (MenuItem) o;
+        return Objects.equals(id, menuItem.id) &&
+                type == menuItem.type &&
+                Objects.equals(name, menuItem.name);
+    }
+
 }

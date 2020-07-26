@@ -1,5 +1,7 @@
 package com.pizzeria.store.entity;
 
+import java.util.Objects;
+
 public class Pizza extends MenuItem {
 
     private Type pizzaType;
@@ -8,8 +10,10 @@ public class Pizza extends MenuItem {
 
     public Pizza(Integer id, Integer quantity, Crust crust) {
         super(id, MenuItem.Type.PIZZA, quantity);
-        crust.setQuantity(this.getQuantity());
         this.crust = crust;
+        if (crust != null) {
+            crust.setQuantity(this.getQuantity());
+        }
     }
 
     public Pizza(String name, Float price, Size size, Type pizzaType, Integer quantity) {
@@ -75,7 +79,7 @@ public class Pizza extends MenuItem {
         }
     }
 
-    public static class Builder{
+    public static class Builder {
         private Integer id;
         private String name;
         private String description;
@@ -85,11 +89,11 @@ public class Pizza extends MenuItem {
         private Crust crust;
         private Size size;
 
-        public Builder(Integer id){
+        public Builder(Integer id) {
             this.id = id;
         }
 
-        public Builder(){
+        public Builder() {
         }
 
         public Builder id(Integer id) {
@@ -114,6 +118,9 @@ public class Pizza extends MenuItem {
 
         public Builder setQuantity(Integer quantity) {
             this.quantity = quantity;
+            if (this.crust != null) {
+                this.crust.setQuantity(quantity);
+            }
             return this;
         }
 
@@ -132,8 +139,8 @@ public class Pizza extends MenuItem {
             return this;
         }
 
-        public Pizza build(){
-            Pizza pizza = new Pizza(this.id, (this.quantity != null? this.quantity : 1), this.crust);
+        public Pizza build() {
+            Pizza pizza = new Pizza(this.id, (this.quantity != null ? this.quantity : 1), this.crust);
             pizza.size = this.size;
             pizza.pizzaType = this.pizzaType;
             pizza.setPrice(this.price);
@@ -141,5 +148,16 @@ public class Pizza extends MenuItem {
             pizza.setDescription(this.description);
             return pizza;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pizza)) return false;
+        if (!super.equals(o)) return false;
+        Pizza pizza = (Pizza) o;
+        return pizzaType == pizza.pizzaType &&
+                Objects.equals(crust, pizza.crust) &&
+                size == pizza.size;
     }
 }

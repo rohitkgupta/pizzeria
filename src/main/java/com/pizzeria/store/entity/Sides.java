@@ -9,4 +9,6 @@ public class Sides extends MenuItem {
     public Sides(String name, Float price, Integer quantity){
         super(MenuItem.Type.SIDES, name, price, quantity);
     }
+
+
 }
