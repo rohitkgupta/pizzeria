@@ -6,9 +6,9 @@ import com.pizzeria.store.entity.MenuItem;
 import com.pizzeria.store.entity.Pizza;
 import com.pizzeria.store.entity.Topping;
 import com.pizzeria.store.entity.decorator.ToppingDecorator;
-import com.pizzeria.store.exception.InvalidDataException;
 import com.pizzeria.store.exception.InvalidOrderException;
 import com.pizzeria.store.service.ItemService;
+import com.pizzeria.store.utils.ItemUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,19 +48,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public MenuItem addItem(MenuItem item) {
-        isValidItemData(item);
+        ItemUtils.isValidItemData(item);
         return itemDao.addItem(item);
-    }
-
-    private void isValidItemData(MenuItem item) {
-        if (item == null || item.getType() == null || item.getName() == null || item.getQuantity() == null || item.getPrice() == null) {
-            throw new InvalidDataException("Invalid data.");
-        }
     }
 
     @Override
     public MenuItem updateItem(MenuItem item) {
-        isValidItem(item);
+        ItemUtils.isValidItem(item);
         try {
             LockService.getLock(item.getId()).writeLock().lock();
             return itemDao.updateItem(item);
@@ -69,9 +63,6 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private void isValidItem(MenuItem item) {
-        isInvalid(item == null || item.getId() == null, "Invalid data.");
-    }
 
     @Override
     public void placeOrderAndUpdateItemInventory(List<MenuItem> items) {
@@ -96,8 +87,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public MenuItem validateStock(MenuItem item) {
-        isValidItem(item);
-        isInvalid(item.getQuantity() == null, "Invalid item quantity");
+        ItemUtils.isValidItem(item);
+        ItemUtils.isValidField(item.getQuantity());
         try {
             LockService.getLock(item.getId()).readLock().lock();
             MenuItem itemFromDB = verifyStock(item);
@@ -128,11 +119,6 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private void isInvalid(boolean b, String s) {
-        if (b) {
-            throw new InvalidDataException(s);
-        }
-    }
 
     private void overrideMetaAndPriceFromDB(MenuItem item, MenuItem existingItem) {
         item.setName(existingItem.getName());

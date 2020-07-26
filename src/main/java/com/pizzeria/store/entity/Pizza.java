@@ -74,4 +74,72 @@ public class Pizza extends MenuItem {
             return this.name;
         }
     }
+
+    public static class Builder{
+        private Integer id;
+        private String name;
+        private String description;
+        private Float price;
+        private Integer quantity;
+        private Type pizzaType;
+        private Crust crust;
+        private Size size;
+
+        public Builder(Integer id){
+            this.id = id;
+        }
+
+        public Builder(){
+        }
+
+        public Builder id(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setPrice(Float price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder setQuantity(Integer quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder setPizzaType(Type pizzaType) {
+            this.pizzaType = pizzaType;
+            return this;
+        }
+
+        public Builder setCrust(Crust crust) {
+            this.crust = crust;
+            return this;
+        }
+
+        public Builder setSize(Size size) {
+            this.size = size;
+            return this;
+        }
+
+        public Pizza build(){
+            Pizza pizza = new Pizza(this.id, (this.quantity != null? this.quantity : 1), this.crust);
+            pizza.size = this.size;
+            pizza.pizzaType = this.pizzaType;
+            pizza.setPrice(this.price);
+            pizza.setName(this.name);
+            pizza.setDescription(this.description);
+            return pizza;
+        }
+    }
 }
