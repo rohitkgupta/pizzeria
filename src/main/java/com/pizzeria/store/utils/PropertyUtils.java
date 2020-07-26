@@ -1,8 +1,7 @@
 package com.pizzeria.store.utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertyUtils {
@@ -18,7 +17,7 @@ public class PropertyUtils {
             synchronized (INSTANCE) {
                 if (INSTANCE.properties == null) {
                     try {
-                        INSTANCE.properties = readPropertiesFile("/Users/rohitgupta/Documents/Workplace/pocs/pizza-factory/src/main/resources/application.properties");
+                        INSTANCE.properties = readPropertiesFile("application.properties");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -36,17 +35,17 @@ public class PropertyUtils {
     }
 
     public static Properties readPropertiesFile(String fileName) throws IOException {
-        FileInputStream fis = null;
+        InputStream inputStream = null;
         Properties prop = null;
         try {
-            fis = new FileInputStream(fileName);
             prop = new Properties();
-            prop.load(fis);
+            inputStream = PropertyUtils.class.getClassLoader().getResourceAsStream(fileName);
+            prop.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (fis != null) {
-                fis.close();
+            if (inputStream != null) {
+                inputStream.close();
             }
         }
         return prop;
