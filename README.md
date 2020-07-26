@@ -1,4 +1,9 @@
 ###### Pizza Factory
+Build Instructions: Please use ./gradlew clean build command to build project on your machine.
+This command will run test cases and generate executable jar.
+Run  java -jar build/libs/pizzafactory-1.0-SNAPSHOT.jar to launch command line client for pizza-factory.
+
+Note: You may need to run chmod +x gradlew first time to give executable permission to gradlew. 
 
 PizzaFactory is a backend service for Pizza Store and it has two entry points.
 
