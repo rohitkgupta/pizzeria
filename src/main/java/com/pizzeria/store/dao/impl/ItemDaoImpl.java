@@ -82,13 +82,13 @@ public class ItemDaoImpl implements ItemDao {
     public List<MenuItem> updateQuantity(List<MenuItem> items) {
         if (items != null) {
             List<MenuItem> result = new LinkedList<>();
-            for (MenuItem item: items) {
+            items.forEach(item -> {
                 MenuItem existingItem = itemTable.get(item.getId());
                 if (item.getQuantity() != null) {
                     existingItem.setQuantity(existingItem.getQuantity() - item.getQuantity());
                 }
                 result.add(existingItem);
-            }
+            });
             return result;
         }
         throw null;

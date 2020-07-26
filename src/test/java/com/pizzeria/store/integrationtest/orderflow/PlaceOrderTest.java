@@ -22,7 +22,7 @@ public class PlaceOrderTest {
     public void placeNonVegPizzaOrderWithToppings() {
         Cart.Builder cartBuilder = new Cart.Builder();
         cartBuilder.forUser("test");
-        Pizza pizza = new Pizza(inventoryHelper.nonVegPizza.getId(), 1, inventoryHelper.crust);
+        Pizza pizza = new Pizza(inventoryHelper.nonVegPizza.getId(), 1, new Crust(inventoryHelper.crust.getId(), 1));
         pizza = new ToppingDecorator(pizza, new Topping(inventoryHelper.vegTopping.getId()));
         pizza = new ToppingDecorator(pizza, new Topping(inventoryHelper.nonVegTopping.getId()));
         cartBuilder.addItem(pizza);
@@ -38,7 +38,7 @@ public class PlaceOrderTest {
     public void placeVegPizzaOrderWithCoke() {
         Cart.Builder cartBuilder = new Cart.Builder();
         cartBuilder.forUser("test");
-        cartBuilder.addItem(new Pizza(inventoryHelper.vegPizza.getId(), 1, inventoryHelper.crust));
+        cartBuilder.addItem(new Pizza(inventoryHelper.vegPizza.getId(), 1, new Crust(inventoryHelper.crust.getId(), 1)));
         cartBuilder.addItem(new Sides(inventoryHelper.coke.getId(), 1));
         Order order = new Order(cartBuilder.build());
 

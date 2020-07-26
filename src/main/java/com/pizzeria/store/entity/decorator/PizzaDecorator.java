@@ -6,7 +6,7 @@ public class PizzaDecorator extends Pizza {
     private Pizza pizza;
 
     public PizzaDecorator(Pizza pizza) {
-        super(pizza.getId(), pizza.getQuantity(), pizza.getCrust());
+        super(pizza);
         this.pizza = pizza;
     }
 

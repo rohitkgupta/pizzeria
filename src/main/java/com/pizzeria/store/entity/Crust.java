@@ -1,13 +1,12 @@
 package com.pizzeria.store.entity;
 
-public class Crust {
-    private String name;
+public class Crust extends MenuItem {
 
-    public Crust(String name){
-        this.name = name;
+    public Crust(Integer id,  Integer quantity){
+        super(id, Type.CRUST, quantity);
     }
 
-    public String getName() {
-        return name;
+    public Crust(String name, Integer quantity){
+        super(MenuItem.Type.CRUST, name, 0f, quantity);
     }
 }

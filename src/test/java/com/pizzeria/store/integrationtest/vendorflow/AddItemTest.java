@@ -1,9 +1,6 @@
 package com.pizzeria.store.integrationtest.vendorflow;
 
-import com.pizzeria.store.entity.MenuItem;
-import com.pizzeria.store.entity.Pizza;
-import com.pizzeria.store.entity.Sides;
-import com.pizzeria.store.entity.Topping;
+import com.pizzeria.store.entity.*;
 import com.pizzeria.store.helper.InventoryHelper;
 import com.pizzeria.store.service.ItemService;
 import com.pizzeria.store.service.VendorService;
@@ -22,34 +19,41 @@ public class AddItemTest {
     }
 
 
+    public void addCrust() {
+        inventoryHelper.crust.setId(vendorService.addItem(inventoryHelper.crust).getId());
+        Assert.assertEquals(4, itemService.getAllItemType().size());
+        Assert.assertEquals(1, itemService.getItems(MenuItem.Type.CRUST).size());
+        Assert.assertEquals(2, itemService.getItems(MenuItem.Type.CRUST).get(0).getQuantity().intValue());
+    }
+
     public void addSides() {
-        inventoryHelper.coke = (Sides) vendorService.addItem(inventoryHelper.coke);
+        inventoryHelper.coke.setId(vendorService.addItem(inventoryHelper.coke).getId());
         Assert.assertEquals(3, itemService.getAllItemType().size());
         Assert.assertEquals(1, itemService.getItems(MenuItem.Type.SIDES).size());
     }
 
     public void addVegTopping() {
-        inventoryHelper.vegTopping = (Topping) vendorService.addItem(inventoryHelper.vegTopping);
+        inventoryHelper.vegTopping.setId(vendorService.addItem(inventoryHelper.vegTopping).getId());
         Assert.assertEquals(2, itemService.getAllItemType().size());
         Assert.assertEquals(2, itemService.getItems(MenuItem.Type.TOPPING).size());
     }
 
     public void addNonVegTopping() {
-        inventoryHelper.nonVegTopping = (Topping) vendorService.addItem(inventoryHelper.nonVegTopping);
+        inventoryHelper.nonVegTopping.setId(vendorService.addItem(inventoryHelper.nonVegTopping).getId());
         Assert.assertEquals(2, itemService.getAllItemType().size());
         Assert.assertEquals(1, itemService.getItems(MenuItem.Type.TOPPING).size());
         Assert.assertEquals(3, itemService.getItems(MenuItem.Type.TOPPING).get(0).getQuantity().intValue());
     }
 
     public void addNonVegPizza() {
-        inventoryHelper.nonVegPizza = (Pizza) vendorService.addItem(inventoryHelper.nonVegPizza);
+        inventoryHelper.nonVegPizza.setId(vendorService.addItem(inventoryHelper.nonVegPizza).getId());
         Assert.assertEquals(1, itemService.getAllItemType().size());
         Assert.assertEquals(2, itemService.getItems(MenuItem.Type.PIZZA).size());
     }
 
     public void addVegPizza() {
         Assert.assertEquals(0, itemService.getAllItemType().size());
-        inventoryHelper.vegPizza = (Pizza) vendorService.addItem(inventoryHelper.vegPizza);
+        inventoryHelper.vegPizza.setId(vendorService.addItem(inventoryHelper.vegPizza).getId());
         Assert.assertEquals(1, itemService.getAllItemType().size());
         Assert.assertEquals(1, itemService.getItems(MenuItem.Type.PIZZA).size());
         Assert.assertEquals(2, itemService.getItems(MenuItem.Type.PIZZA).get(0).getQuantity().intValue());

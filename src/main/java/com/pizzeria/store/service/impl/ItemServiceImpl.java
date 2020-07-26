@@ -48,37 +48,45 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public MenuItem addItem(MenuItem item) {
+        isValidItemData(item);
+        return new MenuItem(itemDao.addItem(item));
+    }
+
+    private void isValidItemData(MenuItem item) {
         if (item == null || item.getType() == null || item.getName() == null || item.getQuantity() == null || item.getPrice() == null) {
             throw new InvalidDataException("Invalid data.");
         }
-        return itemDao.addItem(item);
     }
 
     @Override
     public MenuItem updateItem(MenuItem item) {
-        if (item == null || item.getId() == null) {
-            throw new InvalidDataException("Invalid data.");
-        }
+        isValidItem(item);
         try {
             LockService.getLock(item.getId()).writeLock().lock();
-            return itemDao.updateItem(item);
+            return new MenuItem(itemDao.updateItem(item));
         } finally {
             LockService.getLock(item.getId()).writeLock().unlock();
+        }
+    }
+
+    private void isValidItem(MenuItem item) {
+        if (item == null || item.getId() == null) {
+            throw new InvalidDataException("Invalid data.");
         }
     }
 
     @Override
     public List<MenuItem> placeOrderAndUpdateItemInventory(List<MenuItem> items) {
         if (items != null && !items.isEmpty()) {
-            List<MenuItem> itemListWithTopping = addToppingsInItemList(items);
+            List<MenuItem> itemListWithToppingAndCrust = getItemsToUpdateInventory(items);
             try {
-                for (MenuItem item : itemListWithTopping) {
+                for (MenuItem item : itemListWithToppingAndCrust) {
                     LockService.getLock(item.getId()).writeLock().lock();
                     validateStock(item);
                 }
-                return itemDao.updateQuantity(itemListWithTopping);
+                return itemDao.updateQuantity(itemListWithToppingAndCrust);
             } finally {
-                for (MenuItem item : itemListWithTopping) {
+                for (MenuItem item : itemListWithToppingAndCrust) {
                     LockService.getLock(item.getId()).writeLock().unlock();
                 }
             }
@@ -94,9 +102,12 @@ public class ItemServiceImpl implements ItemService {
                 throw new InvalidOrderException("Item [" + item.getId() + result.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
             }
             copyMetaAndPriceFromDB(item, result.get());
-            if (item.getType() == MenuItem.Type.PIZZA && ((Pizza)item) instanceof ToppingDecorator) {
-                for (Topping topping : ((ToppingDecorator) item).getToppingList()) {
-                    copyMetaAndPriceFromDB(topping, validateStock(topping));
+            if (item.getType() == MenuItem.Type.PIZZA){
+                if(item instanceof ToppingDecorator) {
+                    validateStock(((Pizza) item).getCrust());
+                    for (Topping topping : ((ToppingDecorator) item).getToppingList()) {
+                        copyMetaAndPriceFromDB(topping, validateStock(topping));
+                    }
                 }
             }
         } else {
@@ -111,13 +122,16 @@ public class ItemServiceImpl implements ItemService {
         item.setPrice(existingItem.getPrice());
     }
 
-    private List<MenuItem> addToppingsInItemList(List<MenuItem> items) {
-        List<MenuItem> itemListWithTopping = new LinkedList<>(items);
-        for (MenuItem item : items) {
-            if (item instanceof ToppingDecorator) {
-                itemListWithTopping.addAll(((ToppingDecorator) item).getToppingList());
+    private List<MenuItem> getItemsToUpdateInventory(List<MenuItem> items) {
+        List<MenuItem> result = new LinkedList<>(items);
+        items.forEach(item -> {
+            if(item.getType() == MenuItem.Type.PIZZA){
+                result.add(((Pizza)item).getCrust());
+                if (item instanceof ToppingDecorator) {
+                    result.addAll(((ToppingDecorator) item).getToppingList());
+                }
             }
-        }
-        return itemListWithTopping;
+        });
+        return result;
     }
 }

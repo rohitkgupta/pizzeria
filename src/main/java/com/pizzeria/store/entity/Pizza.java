@@ -8,6 +8,7 @@ public class Pizza extends MenuItem {
 
     public Pizza(Integer id, Integer quantity, Crust crust) {
         super(id, MenuItem.Type.PIZZA, quantity);
+        crust.setQuantity(this.getQuantity());
         this.crust = crust;
     }
 

@@ -20,6 +20,7 @@ public class EndToEndTest {
         addItemTest.addNonVegTopping();
         addItemTest.addVegTopping();
         addItemTest.addSides();
+        addItemTest.addCrust();
 
         validateOrderTest.validateVegPizzaOrderWithCoke();
         validateOrderTest.validateNonVegPizzaOrderWithToppings();

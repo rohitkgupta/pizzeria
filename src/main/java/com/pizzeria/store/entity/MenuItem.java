@@ -81,6 +81,6 @@ public class MenuItem {
     }
 
     public static enum Type {
-        PIZZA, TOPPING, SIDES;
+        PIZZA, TOPPING, SIDES, CRUST;
     }
 }
