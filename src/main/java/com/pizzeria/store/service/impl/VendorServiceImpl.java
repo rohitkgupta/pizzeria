@@ -1,6 +1,6 @@
 package com.pizzeria.store.service.impl;
 
-import com.pizzeria.store.entity.Item;
+import com.pizzeria.store.entity.MenuItem;
 import com.pizzeria.store.exception.InvalidDataException;
 import com.pizzeria.store.service.ItemService;
 import com.pizzeria.store.service.VendorService;
@@ -19,10 +19,10 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public Item addStock(Integer itemId, Integer quantity) {
-        Optional<Item> result = itemService.getItem(itemId);
+    public MenuItem addStock(Integer itemId, Integer quantity) {
+        Optional<MenuItem> result = itemService.getItem(itemId);
         if (result.isPresent()) {
-            Item item = result.get();
+            MenuItem item = result.get();
             item.setQuantity(item.getQuantity() + quantity);
             itemService.updateItem(item);
             return item;
@@ -31,15 +31,15 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public Item addItem(Item item) {
+    public MenuItem addItem(MenuItem item) {
         return itemService.addItem(item);
     }
 
     @Override
-    public Item updatePrice(Integer itemId, Float price) {
-        Optional<Item> result = itemService.getItem(itemId);
+    public MenuItem updatePrice(Integer itemId, Float price) {
+        Optional<MenuItem> result = itemService.getItem(itemId);
         if (result.isPresent()) {
-            Item item = result.get();
+            MenuItem item = result.get();
             item.setPrice(price);
             itemService.updateItem(item);
             return item;

@@ -31,8 +31,8 @@ public class PlaceOrderTest {
         order = orderService.placeOrder(order);
         Assert.assertEquals(Float.valueOf(265f), order.getCart().getTotal());
         Assert.assertEquals(Order.Status.PLACED, order.getStatus());
-        Assert.assertEquals(1, itemService.getItems(Item.Type.PIZZA).get(0).getQuantity().intValue());
-        Assert.assertEquals(0, itemService.getItems(Item.Type.PIZZA).get(1).getQuantity().intValue());
+        Assert.assertEquals(1, itemService.getItems(MenuItem.Type.PIZZA).get(0).getQuantity().intValue());
+        Assert.assertEquals(0, itemService.getItems(MenuItem.Type.PIZZA).get(1).getQuantity().intValue());
     }
 
     public void placeVegPizzaOrderWithCoke() {
@@ -45,8 +45,8 @@ public class PlaceOrderTest {
         order = orderService.placeOrder(order);
         Assert.assertEquals(Float.valueOf(225f), order.getCart().getTotal());
         Assert.assertEquals(Order.Status.PLACED, order.getStatus());
-        Assert.assertEquals(1, itemService.getItems(Item.Type.PIZZA).get(0).getQuantity().intValue());
-        Assert.assertEquals(1, itemService.getItems(Item.Type.PIZZA).get(1).getQuantity().intValue());
+        Assert.assertEquals(1, itemService.getItems(MenuItem.Type.PIZZA).get(0).getQuantity().intValue());
+        Assert.assertEquals(1, itemService.getItems(MenuItem.Type.PIZZA).get(1).getQuantity().intValue());
     }
 
 }

@@ -1,6 +1,6 @@
 package com.pizzeria.store.service.impl;
 
-import com.pizzeria.store.entity.Item;
+import com.pizzeria.store.entity.MenuItem;
 import com.pizzeria.store.entity.Order;
 import com.pizzeria.store.exception.InvalidDataException;
 import com.pizzeria.store.rule.service.ItemValidatorService;
@@ -22,8 +22,8 @@ public class OrderValidatorServiceImpl implements OrderValidatorService {
     @Override
     public Order validate(Order order) {
         validateMandatoryField(order);
-        List<Item> validatedItems = new LinkedList<>();
-        for (Item item : order.getCart().getItems()) {
+        List<MenuItem> validatedItems = new LinkedList<>();
+        for (MenuItem item : order.getCart().getItems()) {
             validatedItems.add(itemValidatorService.validate(item));
         }
         order.getCart().setItems(validatedItems);

@@ -1,6 +1,6 @@
 package com.pizzeria.store.rule.impl;
 
-import com.pizzeria.store.entity.Item;
+import com.pizzeria.store.entity.MenuItem;
 import com.pizzeria.store.entity.Pizza;
 import com.pizzeria.store.entity.Topping;
 import com.pizzeria.store.entity.decorator.ToppingDecorator;
@@ -11,8 +11,8 @@ import java.util.List;
 
 public class NonVegPizzaToppingValidator implements RuleValidator {
     @Override
-    public Item validate(Item item) {
-        if (item.getType() == Item.Type.PIZZA) {
+    public MenuItem validate(MenuItem item) {
+        if (item.getType() == MenuItem.Type.PIZZA) {
             Pizza pizza = (Pizza) item;
             if (pizza.getPizzaType() == Pizza.Type.NON_VEG && pizza instanceof ToppingDecorator) {
                 List<Topping> toppings = ((ToppingDecorator) pizza).getToppingList();

@@ -2,7 +2,7 @@ package com.pizzeria.store.service.impl;
 
 import com.pizzeria.store.dao.ItemDao;
 import com.pizzeria.store.dao.impl.ItemDaoImpl;
-import com.pizzeria.store.entity.Item;
+import com.pizzeria.store.entity.MenuItem;
 import com.pizzeria.store.entity.Pizza;
 import com.pizzeria.store.entity.Topping;
 import com.pizzeria.store.entity.decorator.ToppingDecorator;
@@ -27,17 +27,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Set<Item.Type> getAllItemType() {
+    public Set<MenuItem.Type> getAllItemType() {
         return itemDao.getAllItemType();
     }
 
     @Override
-    public List<Item> getItems(Item.Type type) {
+    public List<MenuItem> getItems(MenuItem.Type type) {
         return itemDao.getItems(type);
     }
 
     @Override
-    public Optional<Item> getItem(Integer id) {
+    public Optional<MenuItem> getItem(Integer id) {
         try {
             LockService.getLock(id).readLock().lock();
             return itemDao.getItem(id);
@@ -47,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item addItem(Item item) {
+    public MenuItem addItem(MenuItem item) {
         if (item == null || item.getType() == null || item.getName() == null || item.getQuantity() == null || item.getPrice() == null) {
             throw new InvalidDataException("Invalid data.");
         }
@@ -55,7 +55,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item updateItem(Item item) {
+    public MenuItem updateItem(MenuItem item) {
         if (item == null || item.getId() == null) {
             throw new InvalidDataException("Invalid data.");
         }
@@ -68,17 +68,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> placeOrderAndUpdateItemInventory(List<Item> items) {
+    public List<MenuItem> placeOrderAndUpdateItemInventory(List<MenuItem> items) {
         if (items != null && !items.isEmpty()) {
-            List<Item> itemListWithTopping = addToppingsInItemList(items);
+            List<MenuItem> itemListWithTopping = addToppingsInItemList(items);
             try {
-                for (Item item : itemListWithTopping) {
+                for (MenuItem item : itemListWithTopping) {
                     LockService.getLock(item.getId()).writeLock().lock();
                     validateStock(item);
                 }
                 return itemDao.updateQuantity(itemListWithTopping);
             } finally {
-                for (Item item : itemListWithTopping) {
+                for (MenuItem item : itemListWithTopping) {
                     LockService.getLock(item.getId()).writeLock().unlock();
                 }
             }
@@ -87,14 +87,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item validateStock(Item item) {
+    public MenuItem validateStock(MenuItem item) {
         if (item != null && item.getId() != null && item.getQuantity() != null) {
-            Optional<Item> result = itemDao.getItem(item.getId());
+            Optional<MenuItem> result = itemDao.getItem(item.getId());
             if (!result.isPresent() || result.get().getQuantity() < item.getQuantity()) {
                 throw new InvalidOrderException("Item [" + item.getId() + result.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
             }
             copyMetaAndPriceFromDB(item, result.get());
-            if (item.getType() == Item.Type.PIZZA && ((Pizza)item) instanceof ToppingDecorator) {
+            if (item.getType() == MenuItem.Type.PIZZA && ((Pizza)item) instanceof ToppingDecorator) {
                 for (Topping topping : ((ToppingDecorator) item).getToppingList()) {
                     copyMetaAndPriceFromDB(topping, validateStock(topping));
                 }
@@ -105,15 +105,15 @@ public class ItemServiceImpl implements ItemService {
         return item;
     }
 
-    private void copyMetaAndPriceFromDB(Item item, Item existingItem) {
+    private void copyMetaAndPriceFromDB(MenuItem item, MenuItem existingItem) {
         item.setName(existingItem.getName());
         item.setDescription(existingItem.getDescription());
         item.setPrice(existingItem.getPrice());
     }
 
-    private List<Item> addToppingsInItemList(List<Item> items) {
-        List<Item> itemListWithTopping = new LinkedList<>(items);
-        for (Item item : items) {
+    private List<MenuItem> addToppingsInItemList(List<MenuItem> items) {
+        List<MenuItem> itemListWithTopping = new LinkedList<>(items);
+        for (MenuItem item : items) {
             if (item instanceof ToppingDecorator) {
                 itemListWithTopping.addAll(((ToppingDecorator) item).getToppingList());
             }

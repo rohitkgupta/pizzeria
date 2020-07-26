@@ -1,12 +1,12 @@
 package com.pizzeria.store.entity;
 
-public class Sides extends Item {
+public class Sides extends MenuItem {
 
     public Sides(Integer id,  Integer quantity){
-        super(id, Item.Type.SIDES, quantity);
+        super(id, MenuItem.Type.SIDES, quantity);
     }
 
     public Sides(String name, Float price, Integer quantity){
-        super(Item.Type.SIDES, name, price, quantity);
+        super(MenuItem.Type.SIDES, name, price, quantity);
     }
 }

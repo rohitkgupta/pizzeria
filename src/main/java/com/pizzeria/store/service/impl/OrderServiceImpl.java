@@ -1,12 +1,9 @@
 package com.pizzeria.store.service.impl;
 
-import com.pizzeria.store.entity.Item;
 import com.pizzeria.store.entity.Order;
 import com.pizzeria.store.service.ItemService;
 import com.pizzeria.store.service.OrderService;
 import com.pizzeria.store.service.OrderValidatorService;
-
-import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
 

@@ -1,18 +1,18 @@
 package com.pizzeria.store.entity;
 
-public class Pizza extends Item {
+public class Pizza extends MenuItem {
 
     private Type pizzaType;
     private Crust crust;
     private Size size;
 
     public Pizza(Integer id, Integer quantity, Crust crust) {
-        super(id,Item.Type.PIZZA, quantity);
+        super(id, MenuItem.Type.PIZZA, quantity);
         this.crust = crust;
     }
 
     public Pizza(String name, Float price, Size size, Type pizzaType, Integer quantity) {
-        super(Item.Type.PIZZA, name, price, quantity);
+        super(MenuItem.Type.PIZZA, name, price, quantity);
         this.size = size;
         this.pizzaType = pizzaType;
     }

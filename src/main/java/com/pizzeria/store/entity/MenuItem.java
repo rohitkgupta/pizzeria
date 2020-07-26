@@ -1,6 +1,6 @@
 package com.pizzeria.store.entity;
 
-public class Item {
+public class MenuItem {
     private Integer id;
     private Type type;
     private String name;
@@ -8,19 +8,19 @@ public class Item {
     private Float price;
     private Integer quantity;
 
-    protected Item(Integer id, Type type, Integer quantity){
+    protected MenuItem(Integer id, Type type, Integer quantity){
         this.id = id;
         this.type = type;
         this.quantity = quantity;
     }
-    protected Item(Type type, String name, Float price, Integer quantity) {
+    protected MenuItem(Type type, String name, Float price, Integer quantity) {
         this.type = type;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
     }
 
-    public Item(Item item) {
+    public MenuItem(MenuItem item) {
         super();
         if (item != null) {
             this.id = item.id;

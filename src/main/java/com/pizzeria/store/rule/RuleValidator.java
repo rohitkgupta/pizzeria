@@ -1,7 +1,7 @@
 package com.pizzeria.store.rule;
 
-import com.pizzeria.store.entity.Item;
+import com.pizzeria.store.entity.MenuItem;
 
 public interface RuleValidator {
-    Item validate(Item item);
+    MenuItem validate(MenuItem item);
 }

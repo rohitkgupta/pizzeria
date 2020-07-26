@@ -1,6 +1,6 @@
 package com.pizzeria.store.rule.service;
 
-import com.pizzeria.store.entity.Item;
+import com.pizzeria.store.entity.MenuItem;
 import com.pizzeria.store.exception.InvalidDataException;
 import com.pizzeria.store.rule.RuleValidator;
 import com.pizzeria.store.service.ItemService;
@@ -28,20 +28,20 @@ public class ItemValidatorService {
         return INSTANCE;
     }
 
-    public Item validate(Item item) {
+    public MenuItem validate(MenuItem item) {
         validateMandatoryField(item);
         item = itemService.validateStock(item);
         return validateRules(item);
     }
 
-    private Item validateRules(Item item) {
+    private MenuItem validateRules(MenuItem item) {
         for (RuleValidator validator: ruleValidators) {
             item = validator.validate(item);
         }
         return item;
     }
 
-    private void validateMandatoryField(Item item) {
+    private void validateMandatoryField(MenuItem item) {
         if (item == null || item.getId() == null || item.getQuantity() == null || item.getQuantity() <= 0) {
             throw new InvalidDataException("Invalid order.");
         }

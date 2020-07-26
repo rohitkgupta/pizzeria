@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Cart {
     private String userName;
-    private List<Item> items;
+    private List<MenuItem> items;
 
     public String getUserName() {
         return userName;
@@ -16,19 +16,19 @@ public class Cart {
         this.userName = userName;
     }
 
-    public List<Item> getItems() {
+    public List<MenuItem> getItems() {
         if (items == null){
             items = new ArrayList<>();
         }
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<MenuItem> items) {
         this.items = items;
     }
     public Float getTotal() {
         Float total = 0f;
-        for (Item item: this.getItems()) {
+        for (MenuItem item: this.getItems()) {
             if (item.getPrice() != null) {
                 total = total + item.getPrice();
             }
@@ -38,14 +38,14 @@ public class Cart {
 
     public static class Builder {
         private String userName;
-        private List<Item> items = new LinkedList<>();
+        private List<MenuItem> items = new LinkedList<>();
 
         public Builder forUser(String name){
             this.userName = name;
             return this;
         }
 
-        public Builder addItem(Item item){
+        public Builder addItem(MenuItem item){
             this.items.add(item);
             return this;
         }
