@@ -30,7 +30,7 @@ public class ItemDaoImpl implements ItemDao {
                 addItemToList(item);
                 updateIndex(item);
             }
-            return item;
+            return new MenuItem(item);
         }
         return null;
     }

@@ -19,15 +19,14 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public MenuItem addStock(Integer itemId, Integer quantity) {
+    public MenuItem restockItem(Integer itemId, Integer quantity) {
         Optional<MenuItem> result = itemService.getItem(itemId);
-        if (result.isPresent()) {
-            MenuItem item = result.get();
-            item.setQuantity(item.getQuantity() + quantity);
-            itemService.updateItem(item);
-            return item;
+        if (!result.isPresent()) {
+            throw new InvalidDataException("Item not found for id:" + itemId);
         }
-        throw new InvalidDataException("Item not found for id:" + itemId);
+        MenuItem item = result.get();
+        item.setQuantity(item.getQuantity() + quantity);
+        return itemService.updateItem(item);
     }
 
     @Override
@@ -38,12 +37,11 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public MenuItem updatePrice(Integer itemId, Float price) {
         Optional<MenuItem> result = itemService.getItem(itemId);
-        if (result.isPresent()) {
-            MenuItem item = result.get();
-            item.setPrice(price);
-            itemService.updateItem(item);
-            return item;
+        if (!result.isPresent()) {
+            throw new InvalidDataException("Item not found for id:" + itemId);
         }
-        throw new InvalidDataException("Item not found for id:" + itemId);
+        MenuItem item = result.get();
+        item.setPrice(price);
+        return itemService.updateItem(item);
     }
 }

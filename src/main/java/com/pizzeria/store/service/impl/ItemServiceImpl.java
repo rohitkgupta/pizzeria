@@ -49,7 +49,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public MenuItem addItem(MenuItem item) {
         isValidItemData(item);
-        return new MenuItem(itemDao.addItem(item));
+        return itemDao.addItem(item);
     }
 
     private void isValidItemData(MenuItem item) {
@@ -63,7 +63,7 @@ public class ItemServiceImpl implements ItemService {
         isValidItem(item);
         try {
             LockService.getLock(item.getId()).writeLock().lock();
-            return new MenuItem(itemDao.updateItem(item));
+            return itemDao.updateItem(item);
         } finally {
             LockService.getLock(item.getId()).writeLock().unlock();
         }
