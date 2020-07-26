@@ -2,7 +2,7 @@ package com.pizzeria.store.rule.impl;
 
 import com.pizzeria.store.entity.Item;
 import com.pizzeria.store.entity.Pizza;
-import com.pizzeria.store.entity.ToppingDecorator;
+import com.pizzeria.store.entity.decorator.ToppingDecorator;
 import com.pizzeria.store.entity.Topping;
 import com.pizzeria.store.exception.InvalidOrderException;
 import com.pizzeria.store.rule.RuleValidator;
