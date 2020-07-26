@@ -25,7 +25,7 @@ public class ValidateOrderTest {
         cartBuilder.addItem(pizza);
 
         Order order = new Order(cartBuilder.build());
-        order = orderService.validate(order);
+        orderService.validate(order);
         Assert.assertEquals(Float.valueOf(265f), order.getCart().getTotal());
         Assert.assertEquals(Order.Status.NEW_ORDER, order.getStatus());
     }
@@ -37,7 +37,7 @@ public class ValidateOrderTest {
         cartBuilder.addItem(new Sides(inventoryHelper.coke.getId(), 1));
 
         Order order = new Order(cartBuilder.build());
-        order = orderService.validate(order);
+        orderService.validate(order);
         Assert.assertEquals(Float.valueOf(225f), order.getCart().getTotal());
         Assert.assertEquals(Order.Status.NEW_ORDER, order.getStatus());
     }

@@ -4,15 +4,12 @@ import com.pizzeria.store.entity.MenuItem;
 import com.pizzeria.store.entity.Order;
 import com.pizzeria.store.exception.InvalidDataException;
 import com.pizzeria.store.exception.InvalidOrderException;
-import com.pizzeria.store.rule.service.ItemValidatorService;
+import com.pizzeria.store.businessrule.validator.service.RuleValidatorService;
 import com.pizzeria.store.service.OrderValidatorService;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class OrderValidatorServiceImpl implements OrderValidatorService {
     private static final OrderValidatorService INSTANCE = new OrderValidatorServiceImpl();
-    private ItemValidatorService itemValidatorService = ItemValidatorService.getInstance();
+    private RuleValidatorService ruleValidatorService = RuleValidatorService.getInstance();
 
     private OrderValidatorServiceImpl() {}
 
@@ -21,15 +18,10 @@ public class OrderValidatorServiceImpl implements OrderValidatorService {
     }
 
     @Override
-    public Order validate(Order order) {
+    public void validate(Order order) {
         validateMandatoryField(order);
         isValidPizzaOrder(order);
-        List<MenuItem> validatedItems = new LinkedList<>();
-        for (MenuItem item : order.getCart().getItems()) {
-            validatedItems.add(itemValidatorService.validate(item));
-        }
-        order.getCart().setItems(validatedItems);
-        return order;
+        order.getCart().getItems().forEach(item -> ruleValidatorService.validate(item));
     }
 
     private void isValidPizzaOrder(Order order) {

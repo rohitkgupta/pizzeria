@@ -138,6 +138,12 @@ public class ItemServiceImpl implements ItemService {
         item.setName(existingItem.getName());
         item.setDescription(existingItem.getDescription());
         item.setPrice(existingItem.getPrice());
+        if (item.getType() == MenuItem.Type.PIZZA){
+            ((Pizza) item).setPizzaType(((Pizza)existingItem).getPizzaType());
+            ((Pizza) item).setSize(((Pizza)existingItem).getSize());
+        } else if (item.getType() == MenuItem.Type.TOPPING){
+            ((Topping) item).setToppingType(((Topping)existingItem).getToppingType());
+        }
     }
 
     private List<MenuItem> getItemsToUpdateInventory(List<MenuItem> items) {

@@ -19,11 +19,16 @@ public class AddItemTest {
     }
 
 
+    public void addLargeVegPizza() {
+        inventoryHelper.largeVegPizza.setId(vendorService.addItem(inventoryHelper.largeVegPizza).getId());
+        Assert.assertEquals(3, itemService.getItems(MenuItem.Type.PIZZA).size());
+    }
+
     public void addCrust() {
         inventoryHelper.crust.setId(vendorService.addItem(inventoryHelper.crust).getId());
         Assert.assertEquals(4, itemService.getAllItemType().size());
         Assert.assertEquals(1, itemService.getItems(MenuItem.Type.CRUST).size());
-        Assert.assertEquals(2, itemService.getItems(MenuItem.Type.CRUST).get(0).getQuantity().intValue());
+        Assert.assertEquals(3, itemService.getItems(MenuItem.Type.CRUST).get(0).getQuantity().intValue());
     }
 
     public void addSides() {

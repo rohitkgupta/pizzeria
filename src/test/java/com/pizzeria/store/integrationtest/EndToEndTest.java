@@ -21,11 +21,13 @@ public class EndToEndTest {
         addItemTest.addVegTopping();
         addItemTest.addSides();
         addItemTest.addCrust();
+        addItemTest.addLargeVegPizza();
 
         validateOrderTest.validateVegPizzaOrderWithCoke();
         validateOrderTest.validateNonVegPizzaOrderWithToppings();
 
         placeOrderTest.placeVegPizzaOrderWithCoke();
         placeOrderTest.placeNonVegPizzaOrderWithToppings();
+        placeOrderTest.placeLargeVegPizzaOrderWithToppings();
     }
 }

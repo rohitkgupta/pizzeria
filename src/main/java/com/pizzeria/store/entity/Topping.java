@@ -23,6 +23,10 @@ public class Topping extends MenuItem {
         return toppingType;
     }
 
+    public void setToppingType(Type toppingType) {
+        this.toppingType = toppingType;
+    }
+
     public enum Type {
         VEG, NON_VEG, CHEESE
     }

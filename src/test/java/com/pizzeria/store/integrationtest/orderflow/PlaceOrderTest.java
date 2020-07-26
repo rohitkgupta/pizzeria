@@ -35,6 +35,22 @@ public class PlaceOrderTest {
         Assert.assertEquals(0, itemService.getItems(MenuItem.Type.PIZZA).get(1).getQuantity().intValue());
     }
 
+
+    public void placeLargeVegPizzaOrderWithToppings() {
+        Cart.Builder cartBuilder = new Cart.Builder();
+        cartBuilder.forUser("test");
+        Pizza pizza = new Pizza(inventoryHelper.largeVegPizza.getId(), 1, new Crust(inventoryHelper.crust.getId(), 1));
+        pizza = new ToppingDecorator(pizza, new Topping(inventoryHelper.vegTopping.getId()));
+        cartBuilder.addItem(pizza);
+        Order order = new Order(cartBuilder.build());
+
+        order = orderService.placeOrder(order);
+        Assert.assertEquals(Float.valueOf(300f), order.getTotal());
+        Assert.assertEquals(Order.Status.PLACED, order.getStatus());
+        Assert.assertEquals(1, itemService.getItems(MenuItem.Type.PIZZA).get(0).getQuantity().intValue());
+        Assert.assertEquals(0, itemService.getItems(MenuItem.Type.PIZZA).get(1).getQuantity().intValue());
+    }
+
     public void placeVegPizzaOrderWithCoke() {
         Cart.Builder cartBuilder = new Cart.Builder();
         cartBuilder.forUser("test");

@@ -4,5 +4,5 @@ import com.pizzeria.store.entity.Order;
 
 public interface OrderService {
     Order placeOrder(Order order);
-    Order validate(Order order);
+    void validate(Order order);
 }

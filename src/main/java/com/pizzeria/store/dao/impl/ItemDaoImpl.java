@@ -2,8 +2,7 @@ package com.pizzeria.store.dao.impl;
 
 import com.pizzeria.store.dao.ItemDao;
 import com.pizzeria.store.entity.MenuItem;
-import com.pizzeria.store.entity.Pizza;
-import com.pizzeria.store.entity.Topping;
+import com.pizzeria.store.utils.ItemUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,7 +29,7 @@ public class ItemDaoImpl implements ItemDao {
                 addItemToList(item);
                 updateIndex(item);
             }
-            return new MenuItem(item);
+            return ItemUtils.getCopy(item);
         }
         return null;
     }
@@ -56,7 +55,8 @@ public class ItemDaoImpl implements ItemDao {
     @Override
     public Optional<MenuItem> getItem(Integer id) {
         if (id < itemTable.size()) {
-            return Optional.of(new MenuItem(itemTable.get(id)));
+            MenuItem item = itemTable.get(id);
+            return Optional.of(ItemUtils.getCopy(item));
         }
         return Optional.empty();
     }
@@ -71,7 +71,7 @@ public class ItemDaoImpl implements ItemDao {
             if (item.getQuantity() != null) {
                 existingItem.setQuantity(item.getQuantity());
             }
-            return new MenuItem(existingItem);
+            return ItemUtils.getCopy(existingItem);
         }
         throw null;
     }
@@ -85,7 +85,7 @@ public class ItemDaoImpl implements ItemDao {
                 if (item.getQuantity() != null) {
                     existingItem.setQuantity(existingItem.getQuantity() - item.getQuantity());
                 }
-                result.add(new MenuItem(existingItem));
+                result.add(ItemUtils.getCopy(existingItem));
             });
             return result;
         }

@@ -37,6 +37,10 @@ public class Pizza extends MenuItem {
         return pizzaType;
     }
 
+    public void setPizzaType(Type type) {
+        this.pizzaType = type;
+    }
+
     public Crust getCrust() {
         return crust;
     }
@@ -47,6 +51,10 @@ public class Pizza extends MenuItem {
 
     public Size getSize() {
         return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
     }
 
     public enum Size {
