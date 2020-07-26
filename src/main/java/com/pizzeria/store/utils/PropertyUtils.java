@@ -42,10 +42,8 @@ public class PropertyUtils {
             fis = new FileInputStream(fileName);
             prop = new Properties();
             prop.load(fis);
-        } catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             if (fis != null) {
                 fis.close();
