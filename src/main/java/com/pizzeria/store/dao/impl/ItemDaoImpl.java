@@ -9,12 +9,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ItemDaoImpl implements ItemDao {
+    //It will have all types of item(Pizza, toppings, sides, Crust) with array index as ID
+    private final List<MenuItem> itemTable = new ArrayList<>();
+    //Index to store list of ids of same type of item for faster retrieval
+    private final Map<MenuItem.Type, List<Integer>> typeIndex = new EnumMap<>(MenuItem.Type.class);
 
     private static final ItemDaoImpl INSTANCE = new ItemDaoImpl();
-    //Item table. It will have all types of item(Pizza, toppings, sides, Crust)
-    private List<MenuItem> itemTable = new ArrayList<>();
-    //Type index to store list of indexes of same type of item
-    private Map<MenuItem.Type, List<Integer>> typeIndex = new HashMap<>();
 
     private ItemDaoImpl() {
     }

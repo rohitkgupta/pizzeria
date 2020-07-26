@@ -26,11 +26,12 @@ public class Cart {
     public void setItems(List<MenuItem> items) {
         this.items = items;
     }
+
     public Float getTotal() {
         Float total = 0f;
         for (MenuItem item: this.getItems()) {
             if (item.getPrice() != null) {
-                total = total + item.getPrice();
+                total = total + (item.getPrice() * item.getQuantity());
             }
         }
         return total;

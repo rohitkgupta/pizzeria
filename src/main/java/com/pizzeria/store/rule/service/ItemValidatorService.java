@@ -22,7 +22,7 @@ public class ItemValidatorService {
     public static ItemValidatorService getInstance() {
         if (ruleValidators == null) {
             synchronized (INSTANCE) {
-                loadRulesFromPropertyFile();
+                initializeRuleValidators();
             }
         }
         return INSTANCE;
@@ -47,7 +47,7 @@ public class ItemValidatorService {
         }
     }
 
-    private static void loadRulesFromPropertyFile() {
+    private static void initializeRuleValidators() {
         if (ruleValidators == null) {
             ruleValidators = new LinkedList<>();
             String ruleIdentifierList = PropertyUtils.getInstance().getPropertyValue("rules");

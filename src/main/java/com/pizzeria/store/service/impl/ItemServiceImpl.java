@@ -103,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
             MenuItem itemFromDB = verifyStock(item);
             overrideMetaAndPriceFromDB(item, itemFromDB);
             if (item.getType() == MenuItem.Type.PIZZA) {
-                validatePizzaToppingAndCrustStock(item);
+                validateStockForPizzaToppingAndCrust(item);
             }
         } finally {
             LockService.getLock(item.getId()).readLock().unlock();
@@ -119,7 +119,7 @@ public class ItemServiceImpl implements ItemService {
         return result.get();
     }
 
-    private void validatePizzaToppingAndCrustStock(MenuItem item) {
+    private void validateStockForPizzaToppingAndCrust(MenuItem item) {
         validateStock(((Pizza) item).getCrust());
         if (item instanceof ToppingDecorator) {
             for (Topping topping : ((ToppingDecorator) item).getToppingList()) {

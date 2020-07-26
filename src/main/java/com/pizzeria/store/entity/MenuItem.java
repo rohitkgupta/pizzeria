@@ -80,7 +80,7 @@ public class MenuItem {
         this.price = price;
     }
 
-    public static enum Type {
+    public enum Type {
         PIZZA, TOPPING, SIDES, CRUST;
     }
 }
