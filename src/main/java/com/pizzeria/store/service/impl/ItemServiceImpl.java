@@ -70,53 +70,71 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void isValidItem(MenuItem item) {
-        if (item == null || item.getId() == null) {
-            throw new InvalidDataException("Invalid data.");
-        }
+        isInvalid(item == null || item.getId() == null, "Invalid data.");
     }
 
     @Override
-    public List<MenuItem> placeOrderAndUpdateItemInventory(List<MenuItem> items) {
-        if (items != null && !items.isEmpty()) {
-            List<MenuItem> itemListWithToppingAndCrust = getItemsToUpdateInventory(items);
-            try {
-                for (MenuItem item : itemListWithToppingAndCrust) {
-                    LockService.getLock(item.getId()).writeLock().lock();
-                    validateStock(item);
-                }
-                return itemDao.updateQuantity(itemListWithToppingAndCrust);
-            } finally {
-                for (MenuItem item : itemListWithToppingAndCrust) {
-                    LockService.getLock(item.getId()).writeLock().unlock();
-                }
-            }
+    public void placeOrderAndUpdateItemInventory(List<MenuItem> items) {
+        isValidCart(items);
+        List<MenuItem> itemListWithToppingAndCrust = getItemsToUpdateInventory(items);
+        try {
+            itemListWithToppingAndCrust.forEach(item -> {
+                LockService.getLock(item.getId()).writeLock().lock();
+                verifyStock(item);
+            });
+            itemDao.updateQuantity(itemListWithToppingAndCrust);
+        } finally {
+            itemListWithToppingAndCrust.forEach(item -> LockService.getLock(item.getId()).writeLock().unlock());
         }
-        throw new InvalidOrderException("Empty cart.");
+    }
+
+    private void isValidCart(List<MenuItem> items) {
+        if (items == null || items.isEmpty()) {
+            throw new InvalidOrderException("Empty cart.");
+        }
     }
 
     @Override
     public MenuItem validateStock(MenuItem item) {
-        if (item != null && item.getId() != null && item.getQuantity() != null) {
-            Optional<MenuItem> result = itemDao.getItem(item.getId());
-            if (!result.isPresent() || result.get().getQuantity() < item.getQuantity()) {
-                throw new InvalidOrderException("Item [" + item.getId() + result.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
+        isValidItem(item);
+        isInvalid(item.getQuantity() == null, "Invalid item quantity");
+        try {
+            LockService.getLock(item.getId()).readLock().lock();
+            MenuItem itemFromDB = verifyStock(item);
+            overrideMetaAndPriceFromDB(item, itemFromDB);
+            if (item.getType() == MenuItem.Type.PIZZA) {
+                validatePizzaToppingAndCrustStock(item);
             }
-            copyMetaAndPriceFromDB(item, result.get());
-            if (item.getType() == MenuItem.Type.PIZZA){
-                if(item instanceof ToppingDecorator) {
-                    validateStock(((Pizza) item).getCrust());
-                    for (Topping topping : ((ToppingDecorator) item).getToppingList()) {
-                        copyMetaAndPriceFromDB(topping, validateStock(topping));
-                    }
-                }
-            }
-        } else {
-            throw new InvalidDataException("Invalid item id or quantity");
+        } finally {
+            LockService.getLock(item.getId()).readLock().unlock();
         }
         return item;
     }
 
-    private void copyMetaAndPriceFromDB(MenuItem item, MenuItem existingItem) {
+    private MenuItem verifyStock(MenuItem item) {
+        Optional<MenuItem> result = itemDao.getItem(item.getId());
+        if (!result.isPresent() || result.get().getQuantity() < item.getQuantity()) {
+            throw new InvalidOrderException("Item [" + result.map(value -> "," + value.getName()).orElse("") + "] out of stock!");
+        }
+        return result.get();
+    }
+
+    private void validatePizzaToppingAndCrustStock(MenuItem item) {
+        validateStock(((Pizza) item).getCrust());
+        if (item instanceof ToppingDecorator) {
+            for (Topping topping : ((ToppingDecorator) item).getToppingList()) {
+                validateStock(topping);
+            }
+        }
+    }
+
+    private void isInvalid(boolean b, String s) {
+        if (b) {
+            throw new InvalidDataException(s);
+        }
+    }
+
+    private void overrideMetaAndPriceFromDB(MenuItem item, MenuItem existingItem) {
         item.setName(existingItem.getName());
         item.setDescription(existingItem.getDescription());
         item.setPrice(existingItem.getPrice());
@@ -125,8 +143,8 @@ public class ItemServiceImpl implements ItemService {
     private List<MenuItem> getItemsToUpdateInventory(List<MenuItem> items) {
         List<MenuItem> result = new LinkedList<>(items);
         items.forEach(item -> {
-            if(item.getType() == MenuItem.Type.PIZZA){
-                result.add(((Pizza)item).getCrust());
+            if (item.getType() == MenuItem.Type.PIZZA) {
+                result.add(((Pizza) item).getCrust());
                 if (item instanceof ToppingDecorator) {
                     result.addAll(((ToppingDecorator) item).getToppingList());
                 }

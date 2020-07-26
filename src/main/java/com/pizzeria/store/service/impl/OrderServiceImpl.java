@@ -21,7 +21,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order placeOrder(Order order) {
         validatorService.validate(order);
-        order.getCart().setItems(itemService.placeOrderAndUpdateItemInventory(order.getCart().getItems()));
+        itemService.placeOrderAndUpdateItemInventory(order.getCart().getItems());
         order.setStatus(Order.Status.PLACED);
         return order;
     }

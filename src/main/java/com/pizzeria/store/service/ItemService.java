@@ -12,6 +12,6 @@ public interface ItemService {
     Optional<MenuItem> getItem(Integer id);
     MenuItem addItem(MenuItem item);
     MenuItem updateItem(MenuItem item);
-    List<MenuItem> placeOrderAndUpdateItemInventory(List<MenuItem> items);
+    void placeOrderAndUpdateItemInventory(List<MenuItem> items);
     MenuItem validateStock(MenuItem item);
 }
