@@ -98,4 +98,14 @@ public class ItemDaoImpl implements ItemDao {
         }
         typeIndex.get(item.getType()).add(item.getId());
     }
+
+    @Override
+    public Optional<MenuItem> getItem(MenuItem.Type type, String name) {
+        for (MenuItem item : getItems(type)) {
+            if (item.getName().equals(name)) {
+                return Optional.of(item);
+            }
+        }
+        return Optional.empty();
+    }
 }

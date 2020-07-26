@@ -14,4 +14,5 @@ public interface ItemService {
     MenuItem updateItem(MenuItem item);
     void placeOrderAndUpdateItemInventory(List<MenuItem> items);
     MenuItem validateStock(MenuItem item);
+    Optional<MenuItem> getItem(MenuItem.Type type, String name);
 }

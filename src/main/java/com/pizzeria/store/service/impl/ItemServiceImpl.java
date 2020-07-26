@@ -51,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
     public MenuItem addItem(MenuItem item) {
         ItemUtils.isValidItemData(item);
         if (exist(item)){
-            throw new InvalidDataException("Item already exist");
+            throw new InvalidDataException("Item already exist. ItemId:"+item.getId());
         }
         return itemDao.addItem(item);
     }
@@ -145,5 +145,10 @@ public class ItemServiceImpl implements ItemService {
             }
         });
         return result;
+    }
+
+    @Override
+    public Optional<MenuItem> getItem(MenuItem.Type type, String name) {
+        return itemDao.getItem(type, name);
     }
 }

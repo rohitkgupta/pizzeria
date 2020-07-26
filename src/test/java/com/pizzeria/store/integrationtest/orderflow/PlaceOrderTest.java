@@ -7,12 +7,10 @@ import com.pizzeria.store.service.ItemService;
 import com.pizzeria.store.service.OrderService;
 import com.pizzeria.store.service.impl.ItemServiceImpl;
 import com.pizzeria.store.service.impl.OrderServiceImpl;
-import org.junit.Assert;
 
 public class PlaceOrderTest {
 
     private OrderService orderService = OrderServiceImpl.getInstance();
-    private ItemService itemService = ItemServiceImpl.getInstance();
     private InventoryHelper inventoryHelper = null;
 
     public PlaceOrderTest(InventoryHelper inventoryHelper) {
@@ -29,10 +27,6 @@ public class PlaceOrderTest {
         Order order = new Order(cartBuilder.build());
 
         order = orderService.placeOrder(order);
-        Assert.assertEquals(Float.valueOf(265f), order.getCart().getTotal());
-        Assert.assertEquals(Order.Status.PLACED, order.getStatus());
-        Assert.assertEquals(1, itemService.getItems(MenuItem.Type.PIZZA).get(0).getQuantity().intValue());
-        Assert.assertEquals(0, itemService.getItems(MenuItem.Type.PIZZA).get(1).getQuantity().intValue());
     }
 
 
@@ -45,10 +39,6 @@ public class PlaceOrderTest {
         Order order = new Order(cartBuilder.build());
 
         order = orderService.placeOrder(order);
-        Assert.assertEquals(Float.valueOf(300f), order.getTotal());
-        Assert.assertEquals(Order.Status.PLACED, order.getStatus());
-        Assert.assertEquals(1, itemService.getItems(MenuItem.Type.PIZZA).get(0).getQuantity().intValue());
-        Assert.assertEquals(0, itemService.getItems(MenuItem.Type.PIZZA).get(1).getQuantity().intValue());
     }
 
     public void placeVegPizzaOrderWithCoke() {
@@ -59,10 +49,6 @@ public class PlaceOrderTest {
         Order order = new Order(cartBuilder.build());
 
         order = orderService.placeOrder(order);
-        Assert.assertEquals(Float.valueOf(225f), order.getCart().getTotal());
-        Assert.assertEquals(Order.Status.PLACED, order.getStatus());
-        Assert.assertEquals(1, itemService.getItems(MenuItem.Type.PIZZA).get(0).getQuantity().intValue());
-        Assert.assertEquals(1, itemService.getItems(MenuItem.Type.PIZZA).get(1).getQuantity().intValue());
     }
 
 }
