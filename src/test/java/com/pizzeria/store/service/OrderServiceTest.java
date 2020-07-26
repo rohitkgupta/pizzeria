@@ -59,7 +59,7 @@ public class OrderServiceTest {
 
     @Test(expected = InvalidOrderException.class)
     public void testPlaceOrderInvalidOrderCase(){
-        service.placeOrder(new Order(null));
+        service.placeOrder(invalidOrder);
     }
 
     @Test

@@ -2,7 +2,7 @@
 Build Instructions: Please use ./gradlew clean build command to build project on your machine.
 This command will run test cases and generate executable jar.
 
-Note: You may need to run chmod +x gradlew first time to give executable permission to gradlew. 
+Note: You may need to run chmod +x gradle and chmod +x gradlew first time to give executable permission to gradlew. 
 
 I have added both Integration and Unit test cases. If you start reading code from IntegrationTest.java it will give you better idea of flow and design.
 
